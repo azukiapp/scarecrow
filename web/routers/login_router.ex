@@ -1,5 +1,5 @@
 defmodule LoginRouter do
-  use Dynamo.Router
+  use BaseRouter
 
   post "/" do
     conn.resp 200, conn.params[:username]

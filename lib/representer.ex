@@ -8,7 +8,7 @@ defmodule Scarecrow.Representer do
     end
   end
 
-  defmacro __before_compile__(env) do
+  defmacro __before_compile__(_env) do
     quote location: :keep do
       def build(:json, data) do
         unquote(__MODULE__).build_data(__MODULE__, @properties, @links, data)

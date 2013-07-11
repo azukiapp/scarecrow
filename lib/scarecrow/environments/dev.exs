@@ -15,7 +15,7 @@ config :dynamo,
 
   # Show a nice debugging exception page
   # in development
-  exceptions_handler: Exceptions.Debug
+  exceptions_handler: Scarecrow.Expections
 
 # Run on port 4000 for development
 config :server, port: 4000

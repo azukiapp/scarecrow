@@ -1,7 +1,9 @@
 config :dynamo,
   # On production, modules are compiled up-front.
   compile_on_demand: false,
-  reload_modules: false
+  reload_modules: false,
+
+  exceptions_handler: Scarecrow.Expections
 
 config :server,
   port: 8888,

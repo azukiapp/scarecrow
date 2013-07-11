@@ -1,5 +1,5 @@
 defmodule ApplicationRouter do
-  use Dynamo.Router
+  use BaseRouter
 
   prepare do
     conn = conn.fetch([:cookies, :params, :headers])
@@ -7,9 +7,6 @@ defmodule ApplicationRouter do
   end
 
   finalize do
-    if (conn.status != 200) do
-      conn = conn.resp_body :jsx.encode [ error: conn.resp_body ]
-    end
     add_json_headers(conn)
   end
 
@@ -17,10 +14,6 @@ defmodule ApplicationRouter do
   # routers forwarding the requests between them
   # forward "/posts", to: PostsRouter
   forward "/login", to: LoginRouter
-
-  get "/*" do
-    conn.resp 404, "Not found"
-  end
 
   # TODO: Refactory conneg to process header: "Accept"
   defp coneg_check(conn, types) do
