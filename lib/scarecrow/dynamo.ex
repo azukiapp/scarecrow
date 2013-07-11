@@ -1,5 +1,6 @@
 defmodule Scarecrow.Dynamo do
   use Dynamo
+  require Lager
 
   config :dynamo,
     # The environment this Dynamo runs on
@@ -26,6 +27,19 @@ defmodule Scarecrow.Dynamo do
     database: "azuki",
     host: "localhost",
     port: 28015
+
+  initializer :database do
+    config = Scarecrow.Dynamo.config[:rethinkdb]
+
+    # Database config sets
+    :application.set_env(:lethink, :timeout, 60000)
+    :lethink.add_pool(:azuki, 5, [ database: config[:host], port: config[:port] ])
+    :lethink.use(:azuki, config[:database])
+
+    # Database connection test
+    {:ok, _} = :lethink.query(:azuki, [{:table_list}])
+    Lager.info("Connection with #{config[:database]} established")
+  end
 
   # Default functionality available in templates
   templates do
