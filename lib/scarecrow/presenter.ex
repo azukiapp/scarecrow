@@ -1,4 +1,4 @@
-defmodule Scarecrow.Representer do
+defmodule Scarecrow.Presenter do
   defmacro __using__(_opts) do
     quote do
       import :macros, unquote(__MODULE__)

@@ -1,8 +1,7 @@
 Code.require_file "../test_helper.exs", __DIR__
 
-defmodule ScarecrowRepresentersUserTest do
+defmodule UserPresenterTest do
   use ExUnit.Case
-  alias Scarecrow.Representers.UserPresenter, as: UserPresenter
 
   test "return a json representation with property" do
     user   = [ user: "my_user", name: "Jonh" ]
@@ -27,10 +26,3 @@ defmodule ScarecrowRepresentersUserTest do
     assert Dict.equal?(result["_links"]["self"], [ {"href", "/user/my_user"} ])
   end
 end
-
-# {
-#   "_links": {
-#      "self": { "href": "/users/my_user" }
-#   },
-#   "user": "my_user"
-# }

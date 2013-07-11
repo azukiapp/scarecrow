@@ -2,6 +2,9 @@ defmodule LoginRouter do
   use BaseRouter
 
   post "/" do
-    conn.resp 200, conn.params[:username]
+    conn
+      .resp_content_type("application/json")
+      .resp_charset("utf-8")
+      .resp(200, UserPresenter.build(:json, [ user: "nuxlli", name: "Everton" ]))
   end
 end

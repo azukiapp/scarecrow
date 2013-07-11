@@ -1,10 +1,10 @@
-Code.require_file "test_helper.exs", __DIR__
+Code.require_file "../test_helper.exs", __DIR__
 
-defmodule ScarecrowRepresenterTest do
+defmodule ScarecrowPresenterTest do
   use ExUnit.Case
 
   defmodule OrderPresenter do
-    use Scarecrow.Representer
+    use Scarecrow.Presenter
 
     #property
     #property

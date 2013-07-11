@@ -1,5 +1,5 @@
-defmodule Scarecrow.Representers.UserPresenter do
-  use Scarecrow.Representer
+defmodule UserPresenter do
+  use Scarecrow.Presenter
 
   property :user
   property :name
