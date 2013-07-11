@@ -2,7 +2,7 @@ defmodule ApplicationRouter do
   use BaseRouter
 
   prepare do
-    conn = conn.fetch([:cookies, :params, :headers])
+    conn = conn.fetch([:params, :headers])
     coneg_check(conn, :mimetypes.extension("json"))
   end
 

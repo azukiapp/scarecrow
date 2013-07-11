@@ -12,16 +12,4 @@ defmodule ApplicationRouterTest do
   # aspect of a router in isolation. For such, we just
   # need to set the @endpoint to the router under test.
   @endpoint ApplicationRouter
-
-  test "return invalid content type" do
-    conn = conn.put_req_header("Accept", "text/html")
-    conn = halted post(conn, "/login")
-    assert conn.status == 406
-    assert :jsx.decode(conn.resp_body)["error"] == "Not Acceptable"
-  end
-
-  test "return ok for valid content type" do
-    conn = halted post(conn, "/login")
-    assert conn.status == 200
-  end
 end
