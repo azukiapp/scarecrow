@@ -21,10 +21,10 @@ defmodule Scarecrow.Mixfile do
   end
 
   defp deps do
-    [ { :cowboy, %r(.*), github: "extend/cowboy" },
-      { :dynamo, "0.1.0.dev", github: "elixir-lang/dynamo" },
-      { :exlager, %r(.*), github: "khia/exlager" },
-      { :jsx, %r(.*), github: "talentdeficit/jsx", compile: "rebar compile" },
-      { :lethink, %r(.*), github: "taybin/lethink" }]
+    [ { :cowboy, github: "extend/cowboy" },
+      { :dynamo, github: "azukiapp/dynamo" },
+      { :exlager, github: "azukiapp/exlager" },
+      { :jsx, github: "talentdeficit/jsx", compile: "rebar compile" },
+      { :lethink, github: "taybin/lethink" }]
   end
 end
