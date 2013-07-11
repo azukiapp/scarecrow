@@ -15,10 +15,12 @@ defmodule Scarecrow.Test.PrideFormatter do
     end)
   ]
 
-  defrecord Config, counter: 0, test_failures: [], case_failures: [], next_color: 0, scheme: :prideio
+  defrecord Config, tests_counter: 0, invalid_counter: 0,
+                    test_failures: [], case_failures: [], trace: false,
+                    next_color: 0, scheme: :prideio
 
-  def suite_started(_opts) do
-    { :ok, pid } = :gen_server.start_link(__MODULE__, [], [])
+  def suite_started(opts) do
+    { :ok, pid } = :gen_server.start_link(__MODULE__, opts[:trace], [])
     pid
   end
 
@@ -29,14 +31,14 @@ defmodule Scarecrow.Test.PrideFormatter do
   defdelegate test_finished(id, test), to: ExUnit.CLIFormatter
 
   ## Callbacks
-  def init(_args) do
+  def init(trace) do
     scheme = ((Regex.match? %r/^xterm|-256color$/, System.get_env(:TERM)) && :pridelol) || :prideio
-    { :ok, Config.new(scheme: scheme, next_color: :random.uniform(Enum.count(@schemes[scheme]))) }
+    { :ok, Config.new(trace: trace, scheme: scheme, next_color: :random.uniform(Enum.count(@schemes[scheme]))) }
   end
 
-  def handle_cast({ :test_finished, ExUnit.Test[failure: nil] }, config) do
+  def handle_cast({ :test_finished, ExUnit.Test[failure: nil]}, Config[trace: false] = config) do
     IO.write success(".", config.next_color, config.scheme)
-    { :noreply, config.update_counter(&1 + 1).update_next_color(&1 + 1) }
+    { :noreply, config.update_tests_counter(&1 + 1).update_next_color(&1 + 1) }
   end
 
   defdelegate handle_call(msg, from, config), to: ExUnit.CLIFormatter
