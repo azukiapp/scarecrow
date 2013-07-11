@@ -13,16 +13,24 @@ defmodule Scarecrow.Mixfile do
 
   # Configuration for the OTP application
   def application do
-    [ applications: [:exlager, :lethink, :cowboy, :dynamo],
+    [ applications: applications(Mix.env),
       mod: { Scarecrow, [] },
       env: [
         lager: [ colored: true ]
       ]]
   end
 
+  def applications(:test) do
+    [:lethink, :cowboy, :dynamo]
+  end
+
+  def applications(_) do
+    [:exlager] ++ applications(:test)
+  end
+
   defp deps do
     [ { :cowboy, github: "extend/cowboy" },
-      { :dynamo, github: "azukiapp/dynamo" },
+      { :dynamo, github: "elixir-lang/dynamo" },
       { :exlager, github: "azukiapp/exlager" },
       { :jsx, github: "talentdeficit/jsx", compile: "rebar compile" },
       { :lethink, github: "taybin/lethink" }]

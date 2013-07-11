@@ -1,5 +1,5 @@
 [ "cowboy": {:git, "git://github.com/extend/cowboy.git", "39caf34fe3bc0a3c89ac8a06428542555f8e13c1", []},
-  "dynamo": {:git, "git://github.com/azukiapp/dynamo.git", "dcfb899280e4fea969f679be95344cd48d8023da", []},
+  "dynamo": {:git, "git://github.com/elixir-lang/dynamo.git", "fb99b0b240b220dd5ae1ae76084fea602bc7df36", []},
   "ex_doc": {:git, "https://github.com/elixir-lang/ex_doc.git", "4bc1e9af619fd98e51479cbe09157ff831b0d4e1", []},
   "exlager": {:git, "git://github.com/azukiapp/exlager.git", "325c6a9ca60efc2351036bdb945435d8fcf9eb9c", []},
   "goldrush": {:git, "git://github.com/DeadZen/goldrush.git", "879c69874a555b2c13498aa4a3da6f6bbbb6a031", [tag: "879c69874a"]},
