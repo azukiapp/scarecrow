@@ -10,7 +10,7 @@ defmodule Scarecrow.Presenter do
 
   defmacro __before_compile__(_env) do
     quote location: :keep do
-      def build(:json, data) do
+      def build(data) do
         unquote(__MODULE__).build_data(__MODULE__, @properties, @links, data)
       end
     end
@@ -38,7 +38,10 @@ defmodule Scarecrow.Presenter do
     dict = Dict.put(dict, :_links, Enum.map(links, fn(link) ->
       {link, [ href: apply(module, :"link_#{link}", [data])]}
     end))
-    :jsx.encode(dict)
+    :jsx.encode(dict, pre_encode: fn
+      nil -> :null
+      value -> value
+    end)
   end
 end
 
