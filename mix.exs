@@ -4,6 +4,7 @@ defmodule Scarecrow.Mixfile do
   def project do
     [ app: :scarecrow,
       version: "0.0.1",
+      elixir: "~> 0.10.0",
       dynamos: [Scarecrow.Dynamo],
       compilers: [:elixir, :dynamo, :app],
       env: [prod: [compile_path: "ebin"]],
@@ -15,13 +16,14 @@ defmodule Scarecrow.Mixfile do
   def application do
     [ applications: applications(Mix.env),
       mod: { Scarecrow, [] },
+      included_applications: [:exdocker],
       env: [
         lager: [ colored: true ]
       ]]
   end
 
   def applications(:test) do
-    [:lethink, :cowboy, :dynamo]
+    [:lethink, :cowboy, :dynamo, :httpotion]
   end
 
   def applications(_) do
@@ -32,7 +34,8 @@ defmodule Scarecrow.Mixfile do
     [ { :cowboy, github: "extend/cowboy" },
       { :dynamo, github: "elixir-lang/dynamo" },
       { :exlager, github: "azukiapp/exlager" },
-      { :jsx, github: "talentdeficit/jsx", compile: "rebar compile" },
-      { :lethink, github: "taybin/lethink" }]
+      { :jsx, github: "talentdeficit/jsx", compile: "rebar compile", override: true },
+      { :lethink, github: "taybin/lethink" },
+      { :exdocker, github: "azukiapp/exdocker"} ]
   end
 end
