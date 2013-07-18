@@ -1,12 +1,13 @@
 # Scarecrow
 
-This is a project built with Elixir that uses Dynamo to serve web requests.
+Azuki server api
 
-Resources:
+A lightweight Elixir client for the Docker Remote API
 
-* [Elixir website](http://elixir-lang.org/)
-* [Elixir getting started guide](http://elixir-lang.org/getting_started/1.html)
-* [Elixir docs](http://elixir-lang.org/docs)
-* [Dynamo source code](https://github.com/elixir-lang/dynamo)
-* [Dynamo guides](https://github.com/elixir-lang/dynamo#learn-more)
-* [Dynamo docs](http://elixir-lang.org/docs/dynamo)
+## License
+
+"Azuki" and the Azuki logo are copyright (c) 2013 Azuki Serviços de Internet LTDA..
+
+Exdocker source code is released under Apache 2 License.
+
+Check LEGAL and LICENSE files for more information.
