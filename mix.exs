@@ -18,7 +18,8 @@ defmodule Scarecrow.Mixfile do
       mod: { Scarecrow, [] },
       included_applications: [:exdocker],
       env: [
-        lager: [ colored: true ]
+        lager: [ colored: true ],
+        rethinkdb_url: {:from_env, :RETHINKDB_URL, "rethinkdb://localhost:28015/azuki"}
       ]]
   end
 

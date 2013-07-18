@@ -1,6 +1,6 @@
 # Scarecrow
 
-Azuki server api
+Api server and monitor to azukiapp service.
 
 A lightweight Elixir client for the Docker Remote API
 
