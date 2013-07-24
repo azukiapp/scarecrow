@@ -14,13 +14,15 @@ defmodule LoginTest do
 
   test "return invalid content type" do
     conn = conn.put_req_header("Accept", "text/html")
-    conn = halted post(conn, "/login")
+    conn = halted get(conn, "/login")
     assert conn.status == 406
     assert :jsx.decode(conn.resp_body)["error"] == "Not Acceptable"
   end
 
-  test "return ok for valid content type" do
-    conn = halted post(conn, "/login")
-    assert conn.status == 200
+  test "return unauthorized withou username or password" do
+    conn = halted get(conn, "/login")
+    assert conn.status == 401
+    conn = halted get(conn, "/login?username=foo")
+    assert conn.status == 401
   end
 end

@@ -17,26 +17,33 @@ defmodule Scarecrow.Mixfile do
     [ applications: applications(Mix.env),
       mod: { Scarecrow, [] },
       included_applications: [:exdocker],
-      env: [
+      env: ListDict.merge([
         lager: [ colored: true ],
         rethinkdb_url: {:from_env, :RETHINKDB_URL, "rethinkdb://localhost:28015/azuki"}
-      ]]
+      ], env(Mix.env))]
   end
 
   def applications(:test) do
-    [:lethink, :cowboy, :dynamo, :httpotion]
+    [:lexthink, :cowboy, :dynamo, :httpotion]
   end
 
   def applications(_) do
     [:exlager] ++ applications(:test)
   end
 
+  def env(:test) do
+    [rethinkdb_url: {:from_env, :RETHINKDB_URL, "rethinkdb://localhost:28015/azuki_test"}]
+  end
+
+  def env(_), do: []
+
   defp deps do
     [ { :cowboy, github: "extend/cowboy" },
       { :dynamo, github: "elixir-lang/dynamo" },
       { :exlager, github: "azukiapp/exlager" },
       { :jsx, github: "talentdeficit/jsx", compile: "rebar compile", override: true },
-      { :lethink, github: "taybin/lethink" },
+      { :mix_protobuffs, "~> 0.9.0", github: "nuxlli/mix_protobuffs", branch: "fixing_output_ebin", override: true},
+      { :lexthink, github: "azukiapp/lexthink", branch: "add_filter" },
       { :exdocker, github: "azukiapp/exdocker"} ]
   end
 end
