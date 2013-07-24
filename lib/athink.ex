@@ -66,6 +66,11 @@ defmodule Athink do
     new_term(old, filter: [data, options])
   end
 
+  @spec update(Dict.t | fun, Keyword.t) :: :query.t
+  def update(data, options // [], query() = old) do
+    new_term(old, update: [data, options])
+  end
+
   @spec delete(Keyword.t) :: :query.t
   def delete(options // [], query() = old) do
     new_term(old, delete: [options])
