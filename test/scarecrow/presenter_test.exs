@@ -32,6 +32,20 @@ defmodule ScarecrowPresenterTest do
     refute ListDict.has_key?(result, "user")
   end
 
+  test "take propery with data is a enumarable" do
+    order  = [ status: "shiped" ]
+    result = :jsx.decode(OrderPresenter.build(order))
+    assert "shiped", result["status"]
+
+    order  = [{"status", "shiped"}]
+    result = :jsx.decode(OrderPresenter.build(order))
+    assert "shiped", result["status"]
+
+    order  = HashDict.new([{"status", "shiped"}])
+    result = :jsx.decode(OrderPresenter.build(order))
+    assert "shiped", result["status"]
+  end
+
   test "return a self link" do
     order  = [ id: 10 ]
     result = :jsx.decode(OrderPresenter.build(order))

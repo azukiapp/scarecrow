@@ -34,6 +34,11 @@ defmodule Scarecrow.Presenter do
   end
 
   def build_data(module, properties, links, data) do
+    # Fix key acess
+    data = Enum.map(data, fn
+      {key, value} -> { :"#{key}", value }
+    end)
+
     dict = Enum.map(properties, fn(pro) -> {pro, data[pro]} end)
     dict = Dict.put(dict, :_links, Enum.map(links, fn(link) ->
       {link, [ href: apply(module, :"link_#{link}", [data])]}
