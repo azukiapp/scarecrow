@@ -1,6 +1,6 @@
 defmodule LoginRouter do
   use BaseRouter
-  #import Lethink, only: [r: 0]
+  use Athink
 
   @unauthorized :jsx.encode([error: "Unauthorized user"])
 
@@ -18,11 +18,13 @@ defmodule LoginRouter do
     is_bitstring(user) and is_bitstring(password) and
     byte_size(user) > 0 and byte_size(password) > 0 do
 
-      #case r.table("users").filter([user: user, password: password]).run(:azuki) do
-
-      #end
-
-      {:ok, [ name: user, user: user ] }
+      where = HashDict.new(user: user, password: password)
+      case r(r.table("users").filter(where)) do
+        {:ok, [user]} when is_record(user, HashDict) ->
+          {:ok, user.to_list}
+        _ ->
+          {:error, "user not found"}
+      end
   end
 
   defp get_user(_, _), do: {:error}

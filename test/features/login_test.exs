@@ -5,6 +5,7 @@ Code.require_file "../../test_helper.exs", __FILE__
 defmodule LoginTest do
   use Scarecrow.TestCase
   use Dynamo.HTTP.Case
+  use Athink
 
   @endpoint ApplicationRouter
 
@@ -24,5 +25,22 @@ defmodule LoginTest do
     assert conn.status == 401
     conn = halted get(conn, "/login?username=foo")
     assert conn.status == 401
+  end
+
+  test "return unauthorized with invalid username and password" do
+    conn = halted get(conn, "/login?username=invalid_user&password=invalid_password")
+    assert conn.status == 401
+  end
+
+  test "return user representation to valid user" do
+    user = HashDict.new(user: "ringo", name: "Ringo Starr", password: "ha")
+    {:ok, result} = r(r.table("users").insert(user))
+    [user_id] = result["generated_keys"]
+
+    conn   = halted get(conn, "/login?username=ringo&password=ha")
+    result = :jsx.decode(conn.resp_body)
+    assert conn.status == 200
+    assert user[:user] == result["user"]
+    assert user_id == result["id"]
   end
 end
