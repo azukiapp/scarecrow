@@ -5,11 +5,19 @@ defmodule Athink do
 
   defmacro __using__(_opts) do
     quote do
-      import unquote(__MODULE__), only: [r: 0]
+      import unquote(__MODULE__), only: [r: 0, r: 1]
+    end
+  end
 
-      def r(query) do
-        query.run(:azuki)
-      end
+  defmacro r do
+    quote do
+      unquote(__MODULE__)
+    end
+  end
+
+  defmacro r(query) do
+    quote do
+      unquote(query).run(:azuki)
     end
   end
 
@@ -96,10 +104,6 @@ defmodule Athink do
   end
 
   # ACCESSING RQL
-  def r do
-    __MODULE__
-  end
-
   def run(pool, query() = old) do
     Lexthink.run(old.build, pool)
   end
