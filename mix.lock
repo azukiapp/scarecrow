@@ -1,5 +1,6 @@
 [ "cowboy": {:git, "git://github.com/extend/cowboy.git", "ddefa33a38e045d1359149f911359343105a0ce0", []},
   "dynamo": {:git, "git://github.com/elixir-lang/dynamo.git", "541ec3b34278fb0a4a0dcc127d80630d6300fe9a", []},
+  "elixir-date": {:git, "git://github.com/alco/elixir-datetime.git", "3d281426bfef8c771de34850def4dec2b52db05f", []},
   "ex_doc": {:git, "https://github.com/elixir-lang/ex_doc.git", "4bc1e9af619fd98e51479cbe09157ff831b0d4e1", []},
   "exdocker": {:git, "git://github.com/azukiapp/exdocker.git", "45636328f73deaf4f8193a1d7d4d4709bc3c6e0d", []},
   "exlager": {:git, "git://github.com/azukiapp/exlager.git", "325c6a9ca60efc2351036bdb945435d8fcf9eb9c", []},

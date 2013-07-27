@@ -44,6 +44,7 @@ defmodule Scarecrow.Mixfile do
       { :jsx, github: "talentdeficit/jsx", compile: "rebar compile", override: true },
       { :mix_protobuffs, "~> 0.9.0", github: "nuxlli/mix_protobuffs", branch: "fixing_output_ebin", override: true},
       { :lexthink, github: "azukiapp/lexthink", branch: "add_filter" },
+      { :"elixir-date", github: "alco/elixir-datetime" },
       { :exdocker, github: "azukiapp/exdocker"} ]
   end
 end

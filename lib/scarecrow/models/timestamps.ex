@@ -9,6 +9,9 @@ defmodule Scarecrow.Models.Timestamps do
   end
 
   def set_timestamps(record) do
-    record.update(created_at: "hoje", updated_at: "agora pouco")
+    record.update(
+      created_at: Date.now,
+      updated_at: Date.now
+    )
   end
 end
