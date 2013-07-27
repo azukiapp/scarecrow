@@ -23,8 +23,11 @@ defmodule Scarecrow.Models.Document do
       unquote(def_trigger)
       defoverridable [new: 1]
       def new(values) do
-        Enum.reduce(@after_new, super(values), fn ({module, func}, record) ->
-          apply(module, func, [record])
+        Enum.reduce(@after_new, super(values), fn
+          ({module, func}, record) ->
+            apply(module, func, [record])
+          (func, record) ->
+            apply(__MODULE__, func, [record])
         end)
       end
     end
