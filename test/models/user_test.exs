@@ -1,6 +1,7 @@
 Code.require_file "../test_helper.exs", __DIR__
 
 defmodule UserTest do
+  use Athink
   use ExUnit.Case
 
   test "create a record for new user" do
@@ -9,8 +10,16 @@ defmodule UserTest do
     assert User.new(name: "Max").name == "Max"
   end
 
-  test "check is new record" do
-    user = User.new
-    assert user.new_record?
+  test "get user by username and password return error for invalid params" do
+    assert {:error} == User.get_by_user_and_password(nil, nil)
+    assert {:error} == User.get_by_user_and_password("foo", nil)
+  end
+
+  test "get user by username and password" do
+    user = HashDict.new(user: "foo", password: "bar")
+    r(r.table("users").insert(user))
+
+    {:ok, result} = User.get_by_user_and_password("foo", "bar")
+    assert user[:user] == result["user"]
   end
 end

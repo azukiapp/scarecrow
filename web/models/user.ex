@@ -8,18 +8,6 @@ defmodule User do
   field :verified, default: false
   field :verified_at, default: nil
 
-  def name(record) do
-    super record
-  end
-
-  def name(value, record) do
-    super value, record
-  end
-
-  def new_record?(record) do
-    !record._id
-  end
-
   def get_by_user_and_password(user, password) when
     is_bitstring(user) and is_bitstring(password) and
     byte_size(user) > 0 and byte_size(password) > 0 do
