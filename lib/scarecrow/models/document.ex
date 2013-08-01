@@ -11,7 +11,6 @@ defmodule Scarecrow.Models.Document do
       @record_seted false
       @record_self unquote(self)
 
-      @after_new { unquote(__MODULE__), :__after_new__ }
       @before_compile unquote(__MODULE__)
 
       use Scarecrow.Models.DefTrigger, trigger: { unquote(__MODULE__), :def_trigger }
@@ -31,10 +30,6 @@ defmodule Scarecrow.Models.Document do
         end)
       end
     end
-  end
-
-  def __after_new__(record) do
-    record
   end
 
   defmacro field(name, opts // []) do
