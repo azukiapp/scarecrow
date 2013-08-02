@@ -7,6 +7,7 @@ defmodule Scarecrow.Models.Document do
       Module.register_attribute __MODULE__, :before_new, accumulate: true
       Module.register_attribute __MODULE__, :after_new, accumulate: true
       Module.register_attribute __MODULE__, :fields, accumulate: true
+      Module.register_attribute __MODULE__, :default_funcs, accumulate: true
 
       @record_seted false
       @record_self unquote(self)
@@ -20,6 +21,8 @@ defmodule Scarecrow.Models.Document do
   defmacro __before_compile__(_env) do
     quote do
       unquote(def_trigger)
+      def_defaults(@default_funcs)
+
       defoverridable [new: 1]
       def new(values) do
         Enum.reduce(@after_new, super(values), fn
@@ -32,11 +35,33 @@ defmodule Scarecrow.Models.Document do
     end
   end
 
-  defmacro field(name, opts // []) do
-    default = opts[:default]
-    quote do
-      Module.put_attribute __MODULE__, :fields, {:'#{unquote(name)}', unquote(default)}
+  defmacro def_defaults(functions) do
+    quote bind_quoted: [functions: functions] do
+      defoverridable [new: 1]
+      def new(values) do
+        Enum.reduce(unquote(functions), super(values), fn {field, func}, record ->
+          apply(record, field, [func.(record)])
+        end)
+      end
     end
+  end
+
+  defmacro field(name, opts // []) do
+    quotes  = []
+
+    # Save default options based in functions
+    default = case opts[:default] do
+      {:fn, _, _} = default ->
+        quotes = [quote do
+          @default_funcs {unquote(name), unquote(Macro.escape(default))}
+        end]
+        nil
+      value -> value
+    end
+
+    quotes ++ [quote do
+      @fields {:'#{unquote(name)}', unquote(default)}
+    end]
   end
 
   # Record functions override protection

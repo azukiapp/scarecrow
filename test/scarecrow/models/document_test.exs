@@ -14,6 +14,10 @@ defmodule ScarecrowModelsDocumentTest do
     field :created_at
     field :updated_at
 
+    field :about, default: fn doc(title: title, author: author, about: about) ->
+      about || "#{title} <#{author}>"
+    end
+
     @after_new :after_new
     @after_new {__MODULE__, :new_after}
 
@@ -76,5 +80,12 @@ defmodule ScarecrowModelsDocumentTest do
     doc = DocumentTest.new
     assert is_record(doc.updated_at, Date.Gregorian)
     assert is_record(doc.updated_at, Date.Gregorian)
+  end
+
+  test "supports functions as a default value" do
+    doc = DocumentTest.new(title: "My book")
+    assert "#{doc.title} <#{doc.author}>" == doc.about
+    doc = DocumentTest.new(about: "Your book")
+    assert "Your book" == doc.about
   end
 end
