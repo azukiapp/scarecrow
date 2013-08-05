@@ -7,13 +7,26 @@ defmodule ApplicationRouter do
   end
 
   finalize do
-    add_json_headers(conn)
+    base_conn(conn)
   end
 
   # It is common to break your Dynamo in many
   # routers forwarding the requests between them
   # forward "/posts", to: PostsRouter
   forward "/login", to: LoginRouter
+
+  @root :jsx.encode([
+    _links: [
+      [authentication: [ href: "/authetication" ]],
+      [apps: [ href: "/apps" ]]
+    ],
+    version: "v0.0.1"
+  ])
+
+  get "/" do
+    base_conn(conn)
+      .resp(200,  @root)
+  end
 
   # TODO: Refactory conneg to process header: "Accept"
   defp coneg_check(conn, types) do
@@ -30,12 +43,6 @@ defmodule ApplicationRouter do
   end
 
   def halt_json!(conn, status, message) do
-    halt! add_json_headers(conn).resp(status, :jsx.encode([ error: message ]))
-  end
-
-  defp add_json_headers(conn) do
-    conn
-      .resp_content_type("application/json")
-      .resp_charset "utf-8"
+    halt! base_conn(conn).resp(status, :jsx.encode([ error: message ]))
   end
 end
