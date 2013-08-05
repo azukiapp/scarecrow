@@ -4,6 +4,7 @@ defmodule Scarecrow.Presenter do
       import :macros, unquote(__MODULE__)
       Module.register_attribute __MODULE__, :properties, accumulate: true
       Module.register_attribute __MODULE__, :links, accumulate: true
+
       @before_compile unquote(__MODULE__)
     end
   end
@@ -18,7 +19,7 @@ defmodule Scarecrow.Presenter do
 
   defmacro property(p) do
     quote do
-      Module.put_attribute __MODULE__, :properties, unquote(p)
+      @properties unquote(p)
     end
   end
 
@@ -27,7 +28,7 @@ defmodule Scarecrow.Presenter do
     func = :"link_#{type}"
 
     quote do
-      Module.put_attribute __MODULE__, :links, unquote(type)
+      @links unquote(type)
       def unquote(func), [unquote(Macro.escape var)], [],
         unquote(Macro.escape contents, unquote: true)
     end
