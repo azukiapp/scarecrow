@@ -1,10 +1,10 @@
 Code.require_file "../test_helper.exs", __DIR__
 
-defmodule ScarecrowPresenterTest do
+defmodule ScarecrowRepresenterTest do
   use ExUnit.Case
 
-  defmodule OrderPresenter do
-    use Scarecrow.Presenter
+  defmodule OrderRepresenter do
+    use Scarecrow.Representer
 
     property :currency
     property :status
@@ -16,39 +16,39 @@ defmodule ScarecrowPresenterTest do
   end
 
   test "return a valid json representation" do
-    result = OrderPresenter.build([])
+    result = OrderRepresenter.build([])
     assert :jsx.is_json(result)
   end
 
   test "return a property if is maped" do
-    result = :jsx.decode(OrderPresenter.build([ status: "shiped"]))
+    result = :jsx.decode(OrderRepresenter.build([ status: "shiped"]))
     assert "shiped", result["status"]
   end
 
   test "not return a unmaped property" do
     order  = [ status: "shiped", user: 1 ]
-    result = :jsx.decode(OrderPresenter.build(order))
+    result = :jsx.decode(OrderRepresenter.build(order))
     assert "shiped", result["status"]
     refute ListDict.has_key?(result, "user")
   end
 
   test "take propery with data is a enumarable" do
     order  = [ status: "shiped" ]
-    result = :jsx.decode(OrderPresenter.build(order))
+    result = :jsx.decode(OrderRepresenter.build(order))
     assert "shiped", result["status"]
 
     order  = [{"status", "shiped"}]
-    result = :jsx.decode(OrderPresenter.build(order))
+    result = :jsx.decode(OrderRepresenter.build(order))
     assert "shiped", result["status"]
 
     order  = HashDict.new([{"status", "shiped"}])
-    result = :jsx.decode(OrderPresenter.build(order))
+    result = :jsx.decode(OrderRepresenter.build(order))
     assert "shiped", result["status"]
   end
 
   test "return a self link" do
     order  = [ id: 10 ]
-    result = :jsx.decode(OrderPresenter.build(order))
+    result = :jsx.decode(OrderRepresenter.build(order))
 
     assert Dict.has_key?(result, "_links")
     assert Dict.has_key?(result["_links"], "self")

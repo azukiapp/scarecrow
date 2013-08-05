@@ -1,10 +1,10 @@
 Code.require_file "../test_helper.exs", __DIR__
 
-defmodule UserPresenterTest do
+defmodule UserRepresenterTest do
   use ExUnit.Case
   use Athink
 
-  test "user presenter" do
+  test "user representer" do
     user = [user: "ringo", name: "Ringo Starr", password: "foobar"]
 
     r(r.table("users").delete())
