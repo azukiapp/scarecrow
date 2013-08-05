@@ -15,4 +15,5 @@
   "mimetypes": {:git, "git://github.com/spawngrid/mimetypes.git", "47d37a977a7d633199822bf6b08353007483d00f", []},
   "mix_protobuffs": {:git, "git://github.com/nuxlli/mix_protobuffs.git", "79f6982f26603fa433308c5bcc1c8e2273b93e60", [{:branch, "fixing_output_ebin"}]},
   "protobuffs": {:git, "git://github.com/basho/erlang_protobuffs.git", "d64ada24cf0479bcf3358bd67b3fb3d654ae1990", []},
-  "ranch": {:git, "git://github.com/extend/ranch.git", "4f70a16bbe08e446e8fec248ca345d5f8e7df038", [{:ref, "0.8.4"}]} ]
+  "ranch": {:git, "git://github.com/extend/ranch.git", "4f70a16bbe08e446e8fec248ca345d5f8e7df038", [{:ref, "0.8.4"}]},
+  "uuid": {:git, "git://github.com/avtobiff/erlang-uuid.git", "d7f64acd8412b79e854b8c95f4c66d8e071de8d9", [{:tag, "v0.4.4"}]} ]

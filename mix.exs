@@ -24,7 +24,7 @@ defmodule Scarecrow.Mixfile do
   end
 
   def applications(:test) do
-    [:lexthink, :cowboy, :dynamo, :httpotion]
+    [:crypto, :lexthink, :cowboy, :dynamo, :httpotion]
   end
 
   def applications(_) do
@@ -41,6 +41,7 @@ defmodule Scarecrow.Mixfile do
     [ { :cowboy, github: "extend/cowboy" },
       { :dynamo, github: "elixir-lang/dynamo" },
       { :exlager, github: "azukiapp/exlager" },
+      { :uuid, "0.4.4", [github: "avtobiff/erlang-uuid", tag: "v0.4.4"]},
       { :jsx, github: "talentdeficit/jsx", compile: "rebar compile", override: true },
       { :mix_protobuffs, "~> 0.9.0", github: "nuxlli/mix_protobuffs", branch: "fixing_output_ebin", override: true},
       { :lexthink, github: "azukiapp/lexthink", branch: "add_filter" },
