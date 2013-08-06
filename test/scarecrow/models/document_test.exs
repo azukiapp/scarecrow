@@ -2,14 +2,17 @@ Code.require_file "../../test_helper.exs", __DIR__
 
 defmodule ScarecrowModelsDocumentTest do
   use ExUnit.Case
-  alias Scarecrow.Models.Document
+  alias Scarecrow.Models
 
   import ExUnit.CaptureIO
 
   defmodule DocumentTest do
-    use Document, self: :doc
+    use Models.Document, self: :doc
 
     field :title
+
+    # Override support
+    field :author, default: "Joel"
     field :author, default: "Daniel"
     field :created_at
     field :updated_at
