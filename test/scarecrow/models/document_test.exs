@@ -14,15 +14,10 @@ defmodule ScarecrowModelsDocumentTest do
     # Override support
     field :author, default: "Joel"
     field :author, default: "Daniel"
-    field :created_at
-    field :updated_at
 
     field :about, default: fn doc(title: title, author: author, about: about) ->
       about || "#{title} <#{author}>"
     end
-
-    @after_new :after_new
-    @after_new {__MODULE__, :new_after}
 
     defoverridable [title: 2]
     def title(value, doc(title: old) = record) do
@@ -34,14 +29,6 @@ defmodule ScarecrowModelsDocumentTest do
     def author(value, doc(author: old) = record) do
       if old == "Max", do: IO.write(old)
       super value, record
-    end
-
-    def after_new(record) do
-      record.created_at(Date.now)
-    end
-
-    def new_after(record) do
-      record.updated_at(Date.now)
     end
   end
 
@@ -65,24 +52,18 @@ defmodule ScarecrowModelsDocumentTest do
     doc = doc.title "First title"
     assert "First title" == doc.title
 
-    assert capture_io(fn ->
+    assert "First title" == capture_io(fn ->
       doc.title "Second title"
-    end) == "First title"
+    end)
   end
 
   test "override using super call" do
     doc = DocumentTest.new.author "Max"
     assert "Max", doc.author
 
-    assert capture_io(fn ->
+    assert "Max" == capture_io(fn ->
       doc.author "Bill"
-    end) == "Max"
-  end
-
-  test "after new callback support" do
-    doc = DocumentTest.new
-    assert is_record(doc.updated_at, Date.Gregorian)
-    assert is_record(doc.updated_at, Date.Gregorian)
+    end)
   end
 
   test "supports functions as a default value" do

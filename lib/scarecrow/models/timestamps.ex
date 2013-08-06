@@ -4,14 +4,19 @@ defmodule Scarecrow.Models.Timestamps do
       field :created_at
       field :updated_at
 
-      @after_new { unquote(__MODULE__), :set_timestamps }
+      @before_compile unquote(__MODULE__)
     end
   end
 
-  def set_timestamps(record) do
-    record.update(
-      created_at: Date.now,
-      updated_at: Date.now
-    )
+  defmacro __before_compile__(_env) do
+    quote do
+      defoverridable [new: 1]
+      def new(values) do
+        record = super(Keyword.merge(values, [
+          created_at: Date.now,
+          updated_at: Date.now,
+        ]))
+      end
+    end
   end
 end

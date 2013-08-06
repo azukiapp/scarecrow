@@ -4,9 +4,6 @@ defmodule Scarecrow.Models.Document do
     quote do
       import unquote(__MODULE__)
 
-      Module.register_attribute __MODULE__, :before_new, accumulate: true
-      Module.register_attribute __MODULE__, :after_new, accumulate: true
-
       @fields []
       @default_funcs []
 
@@ -23,21 +20,6 @@ defmodule Scarecrow.Models.Document do
     quote do
       unquote(def_trigger)
       def_defaults(@default_funcs)
-      def_after_new
-    end
-  end
-
-  defmacro def_after_new do
-    quote do
-      defoverridable [new: 1]
-      def new(values) do
-        Enum.reduce(@after_new, super(values), fn
-          ({module, func}, record) ->
-            apply(module, func, [record])
-          (func, record) ->
-            apply(__MODULE__, func, [record])
-        end)
-      end
     end
   end
 
