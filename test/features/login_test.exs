@@ -34,13 +34,14 @@ defmodule LoginTest do
 
   test "return user representation to valid user" do
     user = HashDict.new(user: "ringo", name: "Ringo Starr", password: "ha")
-    {:ok, result} = r(r.table("users").insert(user))
-    [user_id] = result["generated_keys"]
+    r(r.table("users").filter(user).delete())
+
+    user = User.new(user.to_list).save
 
     conn   = halted get(conn, "/login?username=ringo&password=ha")
     result = :jsx.decode(conn.resp_body)
     assert conn.status == 200
-    assert user[:user] == result["user"]
-    assert user_id == result["id"]
+    assert user.user == result["user"]
+    assert user.api_key == result["api_key"]
   end
 end

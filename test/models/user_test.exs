@@ -23,9 +23,11 @@ defmodule UserTest do
 
   test "get user by username and password" do
     user = HashDict.new(user: "foo", password: "bar")
-    r(r.table("users").insert(user))
+    r(r.table("users").filter(user).delete)
+
+    user = User.new(user.to_list).save
 
     {:ok, result} = User.get_by_user_and_password("foo", "bar")
-    assert user[:user] == result["user"]
+    assert user.user == result["user"]
   end
 end

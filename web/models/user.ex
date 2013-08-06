@@ -1,10 +1,12 @@
 defmodule User do
-  use Athink
   use Scarecrow.Models.Document
-  use Scarecrow.Models.Timestamps
+  #use Scarecrow.Models.Timestamps
+  use Scarecrow.Models.Rethinkdb
 
   field :name
+  field :user
   field :email
+  field :password
   field :verified, default: false
   field :verified_at, default: nil
 
@@ -20,6 +22,8 @@ defmodule User do
       case r(r.table("users").filter(where)) do
         {:ok, [user]} when is_record(user, HashDict) ->
           {:ok, user.to_list}
+        {:ok, users} ->
+          {:error, "multiple users", users}
         _ ->
           {:error, "user not found"}
       end
