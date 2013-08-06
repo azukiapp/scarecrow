@@ -38,6 +38,26 @@ defmodule Athink do
   end
 
   # MANIPULATING TABLES
+  @spec table_create(binary) :: :query.t
+  def table_create(name) do
+    new_term(table_create: [name])
+  end
+
+  @spec table_create(binary, :query.t) :: :query.t
+  def table_create(name, query() = old) do
+    new_term(old, table_create: [name])
+  end
+
+  @spec table_drop(binary) :: :query.t
+  def table_drop(name) do
+    new_term(table_drop: [name])
+  end
+
+  @spec table_drop(binary, :query.t) :: :query.t
+  def table_drop(name, query() = old) do
+    new_term(old, table_drop: [name])
+  end
+
   @spec table_list() :: :query.t
   def table_list do
     new_term(table_list: [])
@@ -61,25 +81,30 @@ defmodule Athink do
 
   @spec table(binary, :query.t()) :: :query.t
   def table(name, query() = old) do
-    new_term(old, tabel: [name])
+    new_term(old, table: [name])
   end
 
-  @spec insert(Dict.t | [Dict.t], Keyword.t) :: :term.t
-  def insert(data, options // [], query() = old) do
-    new_term(old, insert: [data, options])
+  def get(key, query() = old) do
+    new_term(old, get: [key])
   end
 
-  @spec filter(Dict.t | [Dict.t] | fun, Keyword.t) :: :query.t
+  @spec filter(Dict.t | [Dict.t] | fun, Keyword.t, :query.t) :: :query.t
   def filter(data, options // [], query() = old) do
     new_term(old, filter: [data, options])
   end
 
-  @spec update(Dict.t | fun, Keyword.t) :: :query.t
+  # WRITING DATA
+  @spec insert(Dict.t | [Dict.t], Keyword.t, :query.t) :: :term.t
+  def insert(data, options // [], query() = old) do
+    new_term(old, insert: [data, options])
+  end
+
+  @spec update(Dict.t | fun, Keyword.t, :query.t) :: :query.t
   def update(data, options // [], query() = old) do
     new_term(old, update: [data, options])
   end
 
-  @spec delete(Keyword.t) :: :query.t
+  @spec delete(Keyword.t, :query.t) :: :query.t
   def delete(options // [], query() = old) do
     new_term(old, delete: [options])
   end
