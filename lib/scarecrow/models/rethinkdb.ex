@@ -1,7 +1,10 @@
 defmodule Scarecrow.Models.Rethinkdb do
 
   defrecord Result,
-    deleted: 0, errors: 0, generated_keys: [], inserted: 0, replaced: 0, skipped: 0, unchanged: 0
+    generated_keys: [],
+    deleted: 0, inserted: 0, replaced: 0, skipped: 0, unchanged: 0,
+    new_val: nil, old_val: nil,
+    first_error: nil, errors: 0
 
   defmacro __using__(_opts) do
     quote do
@@ -36,7 +39,11 @@ defmodule Scarecrow.Models.Rethinkdb do
       end
 
       def save(record) do
-        insert(record)
+        if new_record?(record) do
+          insert(record)
+        else
+          replace(record)
+        end
       end
 
       def get(key) do
@@ -44,13 +51,38 @@ defmodule Scarecrow.Models.Rethinkdb do
       end
 
       def insert(record) do
-        doc = HashDict.new(Keyword.delete(record.to_keywords, :id))
-        case write_query(table.insert(doc)) do
-          Result[inserted: 1.0, generated_keys: [key]] ->
-            get(key)
+        doc = document_prepare(Keyword.delete(record.to_keywords, :id))
+        case write_query(table.insert(doc, return_vals: true)) do
+          {:ok, Result[inserted: 1.0, new_val: new_val]} ->
+            to_record(new_val)
           result ->
             result
         end
+      end
+
+      def replace(record) do
+        doc = document_prepare(record.to_keywords)
+        case write_query(table.get(record.id).replace(doc)) do
+          {:ok, Result[replaced: 1.0] = result} ->
+            {:ok, record}
+          result ->
+            result
+        end
+      end
+
+      defoverridable [update: 2]
+      def update(fields, record) do
+        doc = document_prepare(fields)
+        case write_query(table.get(record.id).update(doc, return_vals: true)) do
+          {:ok, Result[replaced: 1.0, new_val: new_val]} ->
+            to_record(new_val)
+          result ->
+            result
+        end
+      end
+
+      def table do
+        r.table(__document__(:table_name))
       end
 
       @doc false
@@ -58,26 +90,29 @@ defmodule Scarecrow.Models.Rethinkdb do
         @table_name
       end
 
-      defp table do
-        r.table(__document__(:table_name))
-      end
-
+      # Private session
       defp write_query(query) do
-        case run_query(query) do
-          {:ok, result} ->
-            Result.new(convert_keys_to_atom(result.to_list))
-          error ->
-            error
-        end
+        to_record(run_query(query), Result)
       end
 
       defp find_query(query) do
-        case run_query(query) do
-          {:ok, result} when is_record(result, HashDict) ->
-            apply(__MODULE__, :new, [convert_keys_to_atom(result.to_list)])
-          error ->
-            error
-        end
+        to_record(run_query(query))
+      end
+
+      defp to_record(data) do
+        to_record(data, __MODULE__)
+      end
+
+      defp to_record({:ok, data}, record_type) do
+        to_record(data, record_type)
+      end
+
+      defp to_record(data, record_type) when is_record(data, HashDict) do
+        {:ok, apply(record_type, :new, [convert_keys_to_atom(data.to_list)])}
+      end
+
+      defp to_record(data, record_type) do
+        data
       end
 
       defp convert_keys_to_atom(dict) do
@@ -86,6 +121,7 @@ defmodule Scarecrow.Models.Rethinkdb do
 
       defp run_query(query, try // 0) do
         case r(query) do
+          # Auto table create
           {:error, _, :RUNTIME_ERROR, {:backtrace, [{:frame, :POS, 0, :undefined}]}} ->
             case r(r.table_create(__document__(:table_name))) do
               {:ok, result} when try == 0 ->
@@ -94,6 +130,10 @@ defmodule Scarecrow.Models.Rethinkdb do
             end
           result -> result
         end
+      end
+
+      defp document_prepare(document) do
+        HashDict.new(document)
       end
     end
   end

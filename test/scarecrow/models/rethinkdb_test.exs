@@ -56,18 +56,36 @@ defmodule Scarecrow.Models.RethinkdbTest do
     r(r.table_drop(table_name))
     {:error, _, :RUNTIME_ERROR, _} = r(r.table(table_name).info)
 
-    module.new.save
+    {:ok, _} = module.new.save
     {:ok, info} = r(r.table(table_name).info)
     assert is_record(info, HashDict)
   end
 
   # Persistence
-  test "save is new document and get id" do
+  test "support save a new document and auto get by id" do
     doc   = DocumentTest.new(title: "Programming Erlang")
-    doc_p = doc.save
+    {:ok, doc_p} = doc.save
 
     assert doc.title == doc_p.title
     assert doc_p.persisted?
+  end
+
+  test "support to save a change document" do
+    {:ok, doc} = DocumentTest.new(title: "Foo Bar").save
+    assert doc.persisted?
+    {:ok, _  } = doc.title("Bar Foo").save
+
+    {:ok, doc_n} = DocumentTest.get(doc.id)
+    assert "Bar Foo" == doc_n.title
+  end
+
+  test "support to update partial object" do
+    {:ok, doc} = DocumentTest.new(title: "Foo bar").save
+    assert doc.persisted?
+    {:ok, doc} = doc.update(title: "Bar foo")
+    assert "Bar foo" == doc.title
+    {:ok, doc_n} = DocumentTest.get(doc.id)
+    assert doc.title == doc_n.title
   end
 
   # Finds
@@ -76,7 +94,8 @@ defmodule Scarecrow.Models.RethinkdbTest do
     {:ok, result} = r(r.table(DocumentTest.__document__(:table_name)).insert(doc))
     assert 1.0 == result["inserted"]
 
-    [id | _] = result["generated_keys"]
-    assert "Foo Bar" = DocumentTest.get(id).title
+    [id | _]   = result["generated_keys"]
+    {:ok, doc} = DocumentTest.get(id)
+    assert "Foo Bar" = doc.title
   end
 end

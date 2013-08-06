@@ -19,7 +19,7 @@ defmodule User do
     byte_size(user) > 0 and byte_size(password) > 0 do
 
       where = HashDict.new(user: user, password: password)
-      case r(r.table("users").filter(where)) do
+      case r(table.filter(where)) do
         {:ok, [user]} when is_record(user, HashDict) ->
           {:ok, user.to_list}
         {:ok, users} ->

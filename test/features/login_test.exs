@@ -36,7 +36,7 @@ defmodule LoginTest do
     user = HashDict.new(user: "ringo", name: "Ringo Starr", password: "ha")
     r(r.table("users").filter(user).delete())
 
-    user = User.new(user.to_list).save
+    {:ok, user} = User.new(user.to_list).save
 
     conn   = halted get(conn, "/login?username=ringo&password=ha")
     result = :jsx.decode(conn.resp_body)
