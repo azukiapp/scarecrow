@@ -8,6 +8,7 @@
   "hackney": {:git, "https://github.com/benoitc/hackney.git", "6f9b403602371bc3d4aa0b67b1e253b105075bcf", []},
   "httpotion": {:git, "git://github.com/myfreeweb/httpotion.git", "bc4f83ed0e433db3e1f7dbfb6377210990a35635", [{:branch, "master"}]},
   "ibrowse": {:git, "git://github.com/cmullaparthi/ibrowse.git", "208277b69fa9cc1b68f37d1261a77abe6487a677", []},
+  "inflector": {:git, "git://github.com/azukiapp/inflector.git", "6d9a0027c70f935a7595c6480c65dfa6de8631d7", []},
   "jsx": {:git, "git://github.com/talentdeficit/jsx.git", "352d6b21cbec4fe1b66bc7ce3ded67a3b32add2c", []},
   "lager": {:git, "https://github.com/basho/lager.git", "9b9e53f81c3659e86c99fdc0e5e56ade5d67cb58", []},
   "lexthink": {:git, "git://github.com/azukiapp/lexthink.git", "39e92eb3706251114a77db789a0439086d51f573", [{:branch, "add_filter"}]},
