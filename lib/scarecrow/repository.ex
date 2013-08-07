@@ -14,6 +14,10 @@ defmodule Scarecrow.Repository do
         data_store.save(data)
       end
 
+      def find_by_id(id) do
+        data_store.find_by_id(id)
+      end
+
       def data_store do
         @data_store
       end

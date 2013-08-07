@@ -36,6 +36,10 @@ defmodule Scarecrow.Repository.Rethinkdb do
     update_or_insert(reql, self)
   end
 
+  def find_by_id(id, repo() = self) do
+    format_response(run_reql(self.table.get(id), self), self)
+  end
+
   def remove_all_keys(repo() = self) do
     write_reql(self.table.delete, self)
   end

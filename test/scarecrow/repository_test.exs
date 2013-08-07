@@ -49,4 +49,13 @@ defmodule Scarecrow.RepositoryTest do
     assert id == doc[:id]
     assert "Other" == doc[:title]
   end
+
+  # Finds
+  test "find a document by id" do
+    {:ok, doc_old} = @target.save(HashDict.new(title: "Foo Bar"))
+    {:ok, doc_new} = @target.find_by_id(doc_old[:id])
+
+    assert doc_old[:id] == doc_new[:id]
+    assert doc_old[:title] == doc_new[:title]
+  end
 end
