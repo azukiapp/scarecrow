@@ -10,12 +10,17 @@ defmodule Scarecrow.Models.Timestamps do
 
   defmacro __before_compile__(_env) do
     quote do
+      def touch(record) do
+        record.updated_at Date.now
+      end
+
       defoverridable [new: 1]
       def new(values) do
-        record = super(Keyword.merge(values, [
-          created_at: Date.now,
-          updated_at: Date.now,
-        ]))
+        now = Date.now
+        record = super(Keyword.merge([
+          created_at: now,
+          updated_at: now,
+        ], values))
       end
     end
   end

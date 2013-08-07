@@ -34,21 +34,9 @@ defmodule Scarecrow.Models.Document do
     end
   end
 
+  # TODO: implement field black list
   defmacro field(name, opts // []) do
-    quotes  = []
-
-    # Save default options based in functions
-    default = case opts[:default] do
-      {:fn, _, _} = default ->
-        quotes = [quote do
-          @default_funcs Keyword.merge(
-            @default_funcs,
-            [{unquote(name), unquote(Macro.escape(default))}]
-          )
-        end]
-        nil
-      value -> value
-    end
+    {default, quotes} = extract_default(name, opts[:default])
 
     quotes ++ [quote do
       @fields Keyword.merge(
@@ -69,4 +57,15 @@ defmodule Scarecrow.Models.Document do
       end
     end
   end
+
+  # Extract default value and block if a function value
+  defp extract_default(name, {:fn, _, _} = default) do
+    {nil, [quote do
+      @default_funcs Keyword.merge(
+        @default_funcs,
+        [{unquote(name), unquote(Macro.escape(default))}]
+      )
+    end]}
+  end
+  defp extract_default(_name, default), do: {default, []}
 end
