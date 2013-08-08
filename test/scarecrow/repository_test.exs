@@ -3,24 +3,30 @@ Code.require_file "../test_helper.exs", __DIR__
 defmodule Scarecrow.RepositoryTest do
   use ExUnit.Case
 
+  defrecord DocumentTest, title: nil, author: nil, id: nil
+
   defmodule DocumentTestRepository do
-    use Scarecrow.Repository
+    use Scarecrow.Repository, record: DocumentTest
   end
 
-  @target DocumentTestRepository
+  alias DocumentTestRepository, as: Target
 
   setup_all do
-    {:ok, _} = @target.data_store.remove_all_keys
+    {:ok, _} = Target.data_store.remove_all_keys
     :ok
   end
 
   test "collection_name" do
-    assert "document_tests" == @target.collection_name
+    assert "document_tests" == Target.collection_name
+  end
+
+  test "module" do
+    assert DocumentTest == Target.record
   end
 
   test "create collection if not exist" do
     {:module, module, _, _} = defmodule CollectionCreateTestRepository do
-      use Scarecrow.Repository
+      use Scarecrow.Repository, record: DocumentTest
     end
 
     module.data_store.collection_drop
@@ -31,31 +37,47 @@ defmodule Scarecrow.RepositoryTest do
     assert is_record(info, HashDict)
   end
 
-  test "save a object" do
-    doc = HashDict.new(title: "Any")
-    {:ok, doc} = @target.save(doc)
-    assert "Any" == doc[:title]
-    assert nil   != doc[:id]
+  test "save dict" do
+    dict = HashDict.new(title: "Any")
+    {:ok, doc} = Target.save(dict)
+
+    assert dict[:title] == doc.title
+    assert nil != doc.id
   end
 
-  test "replace a old object" do
-    doc = HashDict.new(title: "Any")
-    {:ok, doc} = @target.save(doc)
-    id  = doc[:id]
+  test "update a old data" do
+    {:ok, doc} = Target.save(HashDict.new(title: "Any"))
+    id  = doc.id
 
-    doc = Dict.put(doc, :title, "Other")
-    {:ok, doc} = @target.save(doc)
+    doc = doc.title "Other"
+    {:ok, doc} = Target.save(doc)
 
-    assert id == doc[:id]
-    assert "Other" == doc[:title]
+    assert id == doc.id
+    assert "Other" == doc.title
+  end
+
+  test "support to persist a record" do
+    {:ok, doc} = Target.save(DocumentTest.new(title: "Title"))
+    assert is_record(doc, DocumentTest)
+    assert nil != doc.id
+    assert "Title" == doc.title
   end
 
   # Finds
   test "find a document by id" do
-    {:ok, doc_old} = @target.save(HashDict.new(title: "Foo Bar"))
-    {:ok, doc_new} = @target.find_by_id(doc_old[:id])
+    {:ok, doc_old} = Target.save(HashDict.new(title: "Foo Bar"))
+    {:ok, doc_new} = Target.find_by_id(doc_old.id)
 
-    assert doc_old[:id] == doc_new[:id]
-    assert doc_old[:title] == doc_new[:title]
+    assert doc_old.id == doc_new.id
+    assert doc_old.title == doc_new.title
+  end
+
+  test "find by attributes" do
+    attributes = HashDict.new(title: "title", author: "author")
+    {:ok, doc} = Target.save(attributes)
+    {:ok, doc_finded} = Target.find_by_attributes(attributes)
+
+    assert doc.id == doc_finded.id
+    assert doc.title == doc_finded.title
   end
 end
