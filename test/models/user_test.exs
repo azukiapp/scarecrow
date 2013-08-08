@@ -1,9 +1,10 @@
 Code.require_file "../test_helper.exs", __DIR__
 
 defmodule UserTest do
-  use Athink
   use ExUnit.Case
   alias Scarecrow.Utils
+
+  require User
 
   test "create a record for new user" do
     assert is_record(User.new, User)
@@ -14,20 +15,5 @@ defmodule UserTest do
   test "dynamic api_key create" do
     user = User.new
     assert String.length(Utils.api_key) == String.length(user.api_key)
-  end
-
-  test "get user by username and password return error for invalid params" do
-    assert {:error} == User.get_by_user_and_password(nil, nil)
-    assert {:error} == User.get_by_user_and_password("foo", nil)
-  end
-
-  test "get user by username and password" do
-    user = HashDict.new(user: "foo", password: "bar")
-    r(User.table.filter(user).delete)
-
-    {:ok, user} = User.new(user.to_list).save
-
-    {:ok, result} = User.get_by_user_and_password("foo", "bar")
-    assert user.user == result["user"]
   end
 end
