@@ -54,4 +54,13 @@ defmodule ScarecrowRepresenterTest do
     assert Dict.has_key?(result["_links"], "self")
     assert Dict.equal?(result["_links"]["self"], [ {"href", "/orders/10"} ])
   end
+
+  defrecord CustomRecord, id: nil, status: "shiped"
+  test "support presenter generator to custom record" do
+    record = CustomRecord.new(id: "11")
+    result = :jsx.decode(OrderRepresenter.build(record))
+
+    assert result["status"] == record.status
+    assert Dict.equal?(result["_links"]["self"], [ {"href", "/orders/#{record.id}"} ])
+  end
 end

@@ -34,6 +34,10 @@ defmodule Scarecrow.Representer do
     end
   end
 
+  def build_data(module, properties, links, data) when is_record(data) and not is_record(data, HashDict) do
+    build_data(module, properties, links, data.to_keywords)
+  end
+
   def build_data(module, properties, links, data) do
     # Fix key acess
     data = Enum.map(data, fn
