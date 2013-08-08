@@ -114,6 +114,12 @@ defmodule Athink do
     new_term(old, delete: [options])
   end
 
+  #TRANSFORMATIONS
+  @spec limit(number, :query.t) :: :query.t
+  def limit(limit, query() = old) do
+    new_term(old, term: [[type: :'LIMIT', args: [expr(limit)]]])
+  end
+
   # CONTROL STRUCTURES
   @spec type_of(:query.t) :: :query.t
   def type_of(query() = old) do
@@ -159,13 +165,27 @@ defmodule Athink do
       case func do
         :term ->
           [mod, func] = [:term, :new]
-          if terms != nil, do: args = [Keyword.put(List.flatten(args), :args, terms)]
+          args = [expand_args(terms, args)]
         _ ->
           mod = L
           if terms != nil, do: args = [terms] ++ args
       end
       apply(mod, func, args)
     end)
+  end
+
+  defp expand_args(terms, opts) do
+    opts = List.flatten(opts)
+    args = Enum.map(Keyword.get(opts, :args, []), fn
+      query() = reql -> reql.build
+      arg -> arg
+    end)
+
+    if terms do
+      args = [terms] ++ args
+    end
+
+    Keyword.put(opts, :args, args)
   end
 
   defp new_term([{func, args}]) do
