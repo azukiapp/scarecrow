@@ -2,7 +2,7 @@ Code.require_file "utils/pride_formatter.exs", __DIR__
 
 Dynamo.under_test(Scarecrow.Dynamo)
 Dynamo.Loader.enable
-ExUnit.start formatter: Scarecrow.Test.PrideFormatter
+ExUnit.start # formatter: Scarecrow.Test.PrideFormatter
 
 defmodule Scarecrow.TestCase do
   use ExUnit.CaseTemplate

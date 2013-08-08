@@ -5,7 +5,7 @@ defmodule Scarecrow.JSON do
 
   def encode(data, opts // []) do
     opts = Keyword.merge(opts, [
-      pre_encode: function(pre_encode/1)
+      pre_encode: &pre_encode/1
     ])
     :jsx.encode(data, opts)
   end

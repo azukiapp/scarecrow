@@ -4,7 +4,7 @@ defmodule Scarecrow.Mixfile do
   def project do
     [ app: :scarecrow,
       version: "0.0.1",
-      elixir: "~> 0.10.0",
+      elixir: "~> 0.10.1",
       dynamos: [Scarecrow.Dynamo],
       compilers: [:elixir, :dynamo, :app],
       env: [prod: [compile_path: "ebin"]],
@@ -44,7 +44,7 @@ defmodule Scarecrow.Mixfile do
       { :inflector, github: "azukiapp/inflector" },
       { :uuid, "0.4.4", [github: "avtobiff/erlang-uuid", tag: "v0.4.4"]},
       { :jsx, github: "talentdeficit/jsx", compile: "rebar compile", override: true },
-      { :mix_protobuffs, "~> 0.9.0", github: "nuxlli/mix_protobuffs", branch: "fixing_output_ebin", override: true},
+      { :mix_protobuffs, "~> 0.9.1", github: "nuxlli/mix_protobuffs", branch: "fixing_use_mix_code_erlang", override: true},
       { :lexthink, github: "azukiapp/lexthink", branch: "add_filter" },
       { :"elixir-date", github: "alco/elixir-datetime" },
       { :exdocker, github: "azukiapp/exdocker"} ]
