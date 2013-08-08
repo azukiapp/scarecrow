@@ -9,7 +9,7 @@ defmodule UserRepresenter do
   property :is_super_user
   property :last_login
   property :name
-  property :user
+  property :username
   property :password_encrypted
   property :verified
   property :verified_at
